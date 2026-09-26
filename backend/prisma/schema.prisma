@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id         BigInt   @id @default(autoincrement())
+  username   String   @unique @db.VarChar(32)
+  email      String   @unique @db.VarChar(255)
+  passwordHash String @map("password_hash") @db.VarChar(255)
+  avatarUrl  String?  @map("avatar_url") @db.VarChar(500)
+
+  level      Int      @default(1) @db.UnsignedInt
+  xp         Int      @default(0) @db.UnsignedInt
+  eloRating  Int      @default(1200) @map("elo_rating")
+  streakDays Int      @default(0) @map("streak_days") @db.UnsignedInt
+  lastActiveDate DateTime? @map("last_active_date") @db.Date
+
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+model Deck {
+  id          BigInt   @id @default(autoincrement())
+  ownerId     BigInt?  @map("owner_id")
+  title       String   @db.VarChar(150)
+  description String?  @db.VarChar(500)
+  coverImage  String?  @map("cover_image") @db.VarChar(500)
+  isPublic    Boolean  @default(true) @map("is_public")
+  cardCount   Int      @default(0) @map("card_count") @db.UnsignedInt
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  flashcards  Flashcard[]
+  rooms       Room[]
+
+  @@map("decks")
+}
+
+model Flashcard {
+  id                  BigInt   @id @default(autoincrement())
+  deckId              BigInt   @map("deck_id")
+  frontText           String   @map("front_text") @db.VarChar(255)
+  backText            String   @map("back_text") @db.VarChar(255)
+  phonetic            String?  @db.VarChar(100)
+  partOfSpeech        String?  @map("part_of_speech") @db.VarChar(30)
+  exampleSentence     String?  @map("example_sentence") @db.VarChar(500)
+  exampleTranslation  String?  @map("example_translation") @db.VarChar(500)
+  imageUrl            String?  @map("image_url") @db.VarChar(500)
+  audioUrl            String?  @map("audio_url") @db.VarChar(500)
+  difficulty          Int      @default(1) @db.UnsignedTinyInt
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  deck Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  progress UserCardProgress[]
+
+  @@map("flashcards")
+}
+enum CardStatus {
+  new
+  learning
+  review
+  mastered
+}
+
+model UserCardProgress {
+  id             BigInt     @id @default(autoincrement())
+  userId         BigInt     @map("user_id")
+  flashcardId    BigInt     @map("flashcard_id")
+
+  // Các trường chuẩn thuật toán SM-2
+  easinessFactor Decimal    @default(2.5) @map("easiness_factor") @db.Decimal(4, 2)
+  intervalDays   Int        @default(0) @map("interval_days") @db.UnsignedInt
+  repetitions    Int        @default(0) @db.UnsignedInt
+  lastQuality    Int?       @map("last_quality") @db.UnsignedTinyInt
+  status         CardStatus @default(new)
+
+  nextReviewAt   DateTime?  @map("next_review_at")
+  lastReviewedAt DateTime?  @map("last_reviewed_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+
+  flashcard Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, flashcardId])
+  @@map("user_card_progress")
+}
+enum RoomStatus {
+  waiting
+  in_progress
+  finished
+}
+
+model Room {
+  id               BigInt     @id @default(autoincrement())
+  roomCode         String     @unique @map("room_code") @db.VarChar(10)
+  hostId           BigInt     @map("host_id")
+  deckId           BigInt     @map("deck_id")
+  status           RoomStatus @default(waiting)
+  maxPlayers       Int        @default(8) @map("max_players") @db.UnsignedTinyInt
+  roundsTotal      Int        @default(10) @map("rounds_total") @db.UnsignedTinyInt
+  timePerRoundSec  Int        @default(15) @map("time_per_round_sec")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  startedAt        DateTime?  @map("started_at")
+  endedAt          DateTime?  @map("ended_at")
+  deck             Deck       @relation(fields: [deckId], references: [id])
+  players RoomPlayer[]
+  
+
+  @@map("rooms")
+}
+
+model RoomPlayer {
+  id          BigInt    @id @default(autoincrement())
+  roomId      BigInt    @map("room_id")
+  userId      BigInt    @map("user_id")
+  joinedAt    DateTime  @default(now()) @map("joined_at")
+  leftAt      DateTime? @map("left_at")
+  totalScore  Int       @default(0) @map("total_score") @db.UnsignedInt
+  finalRank   Int?      @map("final_rank") @db.UnsignedTinyInt
+  eloBefore   Int       @map("elo_before")
+  eloAfter    Int?      @map("elo_after")
+
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, userId])
+  @@map("room_players")
+}
