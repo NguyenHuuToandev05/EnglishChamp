@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Light Mode Background Layers ── */
+  --color-bg: #f4f5fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #f8fafc;
+  --color-surface-3: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-light: #cbd5e1;
+
+  /* ── Brand Primary (Indigo/Purple) ── */
+  --color-primary: #5b4ef5;
+  --color-primary-light: #4f46e5;
+  --color-primary-dim: #eef2ff;
+
+  /* ── Accent Colors ── */
+  --color-gold: #d97706;
+  --color-gold-dim: #fffbeb;
+  --color-success: #059669;
+  --color-success-dim: #ecfdf5;
+  --color-danger: #dc2626;
+  --color-danger-dim: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-dim: #eff6ff;
+
+  /* ── Rank Colors ── */
+  --color-rank-bronze: #b45309;
+  --color-rank-silver: #64748b;
+  --color-rank-gold: #d97706;
+  --color-rank-platinum: #0284c7;
+  --color-rank-diamond: #7c3aed;
+
+  /* ── Text ── */
+  --color-text: #0f172a;
+  --color-text-secondary: #334155;
+  --color-muted: #64748b;
+
+  /* ── Fonts ── */
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Custom Utilities ── */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, #5b4ef5 0%, #4f46e5 100%);
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+/* ── Glow effects ── */
+.glow-primary {
+  box-shadow: 0 4px 14px rgba(91, 78, 245, 0.35);
+}
+
+.glow-gold {
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+/* ── Card hover effect ── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border-color: #cbd5e1;
+}
