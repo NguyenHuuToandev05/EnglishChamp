@@ -28,7 +28,6 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#f4f5fb]">
-            {/* Soft ambient background circles */}
             <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full bg-indigo-100/50 blur-3xl pointer-events-none" />
             <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-amber-100/40 blur-3xl pointer-events-none" />
 
@@ -127,7 +126,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="text-center text-[11px] font-medium text-slate-400 mt-6">
-                    © 2026 EnglishChamp. Tất cả quyền được bảo lưu.
+                    © 2026 EnglishChamp.
                 </p>
             </div>
         </div>
