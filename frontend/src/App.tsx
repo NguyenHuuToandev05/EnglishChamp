@@ -7,6 +7,7 @@ import StudyPage from "./pages/StudyPage";
 import DecksPage from "./pages/DecksPage";
 import ArenaPage from "./pages/ArenaPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
+import LobbyPage from "./pages/LobbyPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/study/:deckId" element={<StudyPage />} />
             <Route path="/decks" element={<DecksPage />} />
             <Route path="/arena" element={<ArenaPage />} />
+            <Route path="/lobby" element={<LobbyPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
           </Route>
 
